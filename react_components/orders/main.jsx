@@ -50,11 +50,16 @@ var Main = React.createClass({
         return {orders: []};
     },
 
-    componentDidMount: function(){
+    getOrders: function(){
         $.get('/api/orders')
         .done(function(orders){
             this.setState({orders: orders});
         }.bind(this));
+    },
+
+    componentDidMount: function(){
+        this.getOrders();
+        setInterval(getOrders, 5000);
     },
 
     deleteOrder: function(id){
