@@ -1,6 +1,7 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 var Button = require('react-bootstrap').Button;
+var Input = require('react-bootstrap').Input;
 var Image = require('react-bootstrap').Image;
 var Navbar = require('react-bootstrap').Navbar;
 var Nav = require('react-bootstrap').Nav;
@@ -34,7 +35,11 @@ var IngredientCard = React.createClass({
 var Main = React.createClass({
 
     getInitialState: function() {
-        return {order: [], ingredients:[]};
+        return {
+            order: [],
+            ingredients:[],
+            name:''
+        };
     },
 
     componentDidMount: function(){
@@ -59,12 +64,18 @@ var Main = React.createClass({
     },
 
     postOrder: function(){
-        var order = {ingredients: this.state.order};
+        var order = {ingredients: this.state.order,
+                     name: this.state.name};
         console.log(order);
         $.post('/api/order', order)
         .done(function(){
             this.setState({order:[]});
         }.bind(this));
+    },
+
+    setName: function(event){
+        console.log(event.target.value);
+        this.setState({name: event.target.value});
     },
 
     render: function() {
@@ -83,7 +94,7 @@ var Main = React.createClass({
 
         return (
             <div className="Main">
-                <Navbar>
+                <Navbar fixedTop>
                     <Navbar.Header>
                         <Navbar.Brand>
                             <a href="#">Scotch Toast</a>
@@ -91,9 +102,11 @@ var Main = React.createClass({
                         <Navbar.Toggle />
                     </Navbar.Header>
                     <Navbar.Collapse>
-                        <Nav pullRight>
-                            <Button nabItem={true} onClick={this.postOrder} bsStyle="success">Order!</Button>
-                        </Nav>
+                        <Navbar.Form pullRight>
+                            <Input type="text" placeholder="Name" onChange={this.setName}/>
+                            {' '}
+                            <Button onClick={this.postOrder} bsStyle="success">Order!</Button>
+                        </Navbar.Form>
                     </Navbar.Collapse>
                 </Navbar>
                 <Grid>

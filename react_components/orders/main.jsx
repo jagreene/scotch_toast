@@ -25,6 +25,7 @@ var OrderCard = React.createClass({
         return (
             <Col xs={12} md={12} lg={12}>
                 <div className='orderCard'>
+                    <h4> {this.props.name} </h4>
                     <Table striped bordered condensed hover>
                         <thead>
                             <tr>
@@ -76,6 +77,7 @@ var Main = React.createClass({
             return (
                 <OrderCard
                     id={order['_id']}
+                    name={order.name}
                     ingredients={order.ingredients}
                     deleteOrder={this.deleteOrder}
                     key={order['_id']}
@@ -84,7 +86,7 @@ var Main = React.createClass({
         }, this)
         return (
             <div className="Main">
-                <Navbar>
+                <Navbar fixedTop>
                     <Navbar.Header>
                         <Navbar.Brand>
                             <a href="#">Scotch Toast</a>

@@ -39,7 +39,8 @@ module.exports = function (){
         },
 
         postOrder: function(req, res){
-            order = new Orders({ingredients: req.body['ingredients[]']});
+            console.log(req.body);
+            order = new Orders({name:req.body['name'], ingredients: req.body['ingredients[]']});
             order.save(function(err, order){
                 if(err){
                     console.log(err);

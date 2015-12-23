@@ -68,3 +68,7 @@ html {
   vertical-align: middle;
   height: 125px;
 }
+
+.row {
+  margin-top: 75px;
+}

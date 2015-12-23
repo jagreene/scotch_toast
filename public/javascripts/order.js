@@ -34818,6 +34818,7 @@ var OrderCard = React.createClass({displayName: "OrderCard",
         return (
             React.createElement(Col, {xs: 12, md: 12, lg: 12}, 
                 React.createElement("div", {className: "orderCard"}, 
+                    React.createElement("h4", null, " ", this.props.name, " "), 
                     React.createElement(Table, {striped: true, bordered: true, condensed: true, hover: true}, 
                         React.createElement("thead", null, 
                             React.createElement("tr", null, 
@@ -34869,6 +34870,7 @@ var Main = React.createClass({displayName: "Main",
             return (
                 React.createElement(OrderCard, {
                     id: order['_id'], 
+                    name: order.name, 
                     ingredients: order.ingredients, 
                     deleteOrder: this.deleteOrder, 
                     key: order['_id']}
@@ -34877,7 +34879,7 @@ var Main = React.createClass({displayName: "Main",
         }, this)
         return (
             React.createElement("div", {className: "Main"}, 
-                React.createElement(Navbar, null, 
+                React.createElement(Navbar, {fixedTop: true}, 
                     React.createElement(Navbar.Header, null, 
                         React.createElement(Navbar.Brand, null, 
                             React.createElement("a", {href: "#"}, "Scotch Toast")

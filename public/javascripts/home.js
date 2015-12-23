@@ -34794,6 +34794,7 @@ module.exports = warning;
 var React = require('react');
 var ReactDOM = require('react-dom');
 var Button = require('react-bootstrap').Button;
+var Input = require('react-bootstrap').Input;
 var Image = require('react-bootstrap').Image;
 var Navbar = require('react-bootstrap').Navbar;
 var Nav = require('react-bootstrap').Nav;
@@ -34827,7 +34828,11 @@ var IngredientCard = React.createClass({displayName: "IngredientCard",
 var Main = React.createClass({displayName: "Main",
 
     getInitialState: function() {
-        return {order: [], ingredients:[]};
+        return {
+            order: [],
+            ingredients:[],
+            name:''
+        };
     },
 
     componentDidMount: function(){
@@ -34852,12 +34857,18 @@ var Main = React.createClass({displayName: "Main",
     },
 
     postOrder: function(){
-        var order = {ingredients: this.state.order};
+        var order = {ingredients: this.state.order,
+                     name: this.state.name};
         console.log(order);
         $.post('/api/order', order)
         .done(function(){
             this.setState({order:[]});
         }.bind(this));
+    },
+
+    setName: function(event){
+        console.log(event.target.value);
+        this.setState({name: event.target.value});
     },
 
     render: function() {
@@ -34876,7 +34887,7 @@ var Main = React.createClass({displayName: "Main",
 
         return (
             React.createElement("div", {className: "Main"}, 
-                React.createElement(Navbar, null, 
+                React.createElement(Navbar, {fixedTop: true}, 
                     React.createElement(Navbar.Header, null, 
                         React.createElement(Navbar.Brand, null, 
                             React.createElement("a", {href: "#"}, "Scotch Toast")
@@ -34884,8 +34895,10 @@ var Main = React.createClass({displayName: "Main",
                         React.createElement(Navbar.Toggle, null)
                     ), 
                     React.createElement(Navbar.Collapse, null, 
-                        React.createElement(Nav, {pullRight: true}, 
-                            React.createElement(Button, {nabItem: true, onClick: this.postOrder, bsStyle: "success"}, "Order!")
+                        React.createElement(Navbar.Form, {pullRight: true}, 
+                            React.createElement(Input, {type: "text", placeholder: "Name", onChange: this.setName}), 
+                            ' ', 
+                            React.createElement(Button, {onClick: this.postOrder, bsStyle: "success"}, "Order!")
                         )
                     )
                 ), 
