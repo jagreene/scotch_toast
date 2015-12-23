@@ -28,11 +28,11 @@ body{
 html {
   height: 100%;
 }
+
 .home {
   display: inline-block;
   width: 100%;
 }
-
 
 .nohighlight {
   -webkit-touch-callout: none;
@@ -43,43 +43,28 @@ html {
   user-select: none;
 }
 
-.roomlabel {
-  text-anchor: middle;
-  pointer-events: none;
-  font-size: 14px;
-  background-color: yellow;
+.ingredientCard {
+  box-shadow: 0 2px 1px rgba(0,0,0,0.26);
+  margin-bottom: 15px;
 }
 
-.roomtooltip {
-  pointer-events: none;
+.orderBtn {
+  cursor: pointer;
+  font-size: 150%;
+}
+.orderCard {
+  box-shadow: 0 2px 5px rgba(0,0,0,0.26);
+  padding: 25px;
+  margin-bottom: 15px;
 }
 
-.roomtooltiproomateslist {
-  font-size: 12px;
+.active {
+  box-shadow: 0 2px 17.5px rgba(0,0,0,0.75);
 }
 
-.roomtooltipheader {
-  font-size: 15px;
-}
-
-.legendtext {
-  text-anchor: end;
-  font-size: 12px;
-}
-
-.mapDiv {
-  width: 50vw;
-  float: left;
-  height: 80vh;
-  margin-top: 25px;
-  margin-left: 0px;
-  margin-bottom: 25px;
-  font-family: 'Open Sans';
-}
-
-
-#mapSVG{
-  width: calc(100%);
-  height: calc(100%);
-  font-family: 'Open Sans';
+.ingredientName {
+  text-align: center;
+  width: 95%;
+  vertical-align: middle;
+  height: 125px;
 }

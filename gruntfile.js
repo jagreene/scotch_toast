@@ -15,8 +15,12 @@ module.exports = function(grunt) {
 
 			},
 			home: {
-				src: ['react_components/**/*.jsx'],
+				src: ['react_components/home/*.jsx'],
 				dest: 'public/javascripts/home.js'
+			},
+			order: {
+				src: ['react_components/orders/*.jsx'],
+				dest: 'public/javascripts/order.js'
 			},
 		}
 	});

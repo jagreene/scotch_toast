@@ -1,43 +1,66 @@
+var Orders = require('../models/orders');
+var fs = require('fs');
+var names = fs.readFileSync("names.txt", 'utf8').split(',');
+
 module.exports = function (){
     return {
         getHome: function(req, res){
-            console.log("Going to login page")
             res.render('home', {});
         },
 
-        getUser: function(req, res){
-            console.log("Getting User Object");
-            Users.findById(req.session.passport.user, function (err, user){
-                if(err){
-                    console.log(err);
-                } else {
-                    res.json(user);
-                }
-            });
+        getKitchen: function(req, res){
+            res.render('orders', {});
         },
 
-        getResidents: function(req, res){
-            Users.find({_id: {$not: req.session.passport.user}}, function (err, users){
-                if(err){
-                    console.log(err);
-                } else {
-                    residents = users.map(function(user){
-                        delete user.notifications;
-                        delete user.userSettings;
-                        return user;
-                    });
-                    res.json(residents);
+        getIngredients: function(req, res){
+            ingredients = []
+            fs.readdir("public/images", (err, files) => {
+                if(err){console.log(err)}
+                else{
+                    files.forEach((fileName, index) => {
+                        ingredients.push({
+                            image: fileName,
+                            name: names[index]
+                        })
+                    })
+                    console.log(ingredients);
+                    res.json(ingredients);
                 }
             })
         },
 
-        postUser: function(req, res){
-            console.log(req.body)
-            Users.create(req.body, function(err){
+        getOrders: function(req, res){
+            Orders.find({}, (err, orders) =>{
+                if(err){console.log(err)}
+                else{
+                    res.json(orders);
+                }
+            })
+        },
+
+        postOrder: function(req, res){
+            order = new Orders({ingredients: req.body['ingredients[]']});
+            order.save(function(err, order){
                 if(err){
                     console.log(err);
                 } else {
-                    res.json("Done!")
+                    console.log(order);
+                    res.json(order);
+                }
+            })
+        },
+
+        deleteOrder: function(req, res){
+            console.log(req.body);
+            Orders.findByIdAndRemove(req.body.id, function(err){
+                if(err){console.log(err)}
+                else{
+                    Orders.find({}, function(err, orders){
+                        if(err){console.log(err)}
+                        else{
+                            res.json(orders);
+                        }
+                    })
                 }
             })
         }

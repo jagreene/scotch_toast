@@ -34793,87 +34793,83 @@ module.exports = warning;
 },{}],403:[function(require,module,exports){
 var React = require('react');
 var ReactDOM = require('react-dom');
-var Button = require('react-bootstrap').Button;
-var Image = require('react-bootstrap').Image;
+var Well = require('react-bootstrap').Well;
+var Table = require('react-bootstrap').Table;
 var Navbar = require('react-bootstrap').Navbar;
-var Nav = require('react-bootstrap').Nav;
 var Grid = require('react-bootstrap').Grid;
 var Row = require('react-bootstrap').Row;
 var Col = require('react-bootstrap').Col;
 
-var IngredientCard = React.createClass({displayName: "IngredientCard",
+var OrderCard = React.createClass({displayName: "OrderCard",
     handleClick: function(){
-        this.props.addIngredient(this.props.name)
+        this.props.deleteOrder(this.props.id)
     },
 
     render: function(){
-        if(this.props.active){
-            var className="ingredientCard active nohighlight";
-        } else {
-            var className="ingredientCard nohighlight";
-        }
+
+        ingredientsSection = this.props.ingredients.map(function(ingredient, num){
+            return (
+                React.createElement("tr", null, 
+                    React.createElement("td", null, num, " "), 
+                    React.createElement("td", null, " ", ingredient, " ")
+                )
+            )
+        })
         return (
-            React.createElement(Col, {xs: 6, md: 4, lg: 3}, 
-                React.createElement("div", {className: className, onClick: this.handleClick}, 
-                    React.createElement(Image, {src: "images/"+ this.props.src, responsive: true}), 
-                    React.createElement("h3", {className: "ingredientName"}, this.props.name)
+            React.createElement(Col, {xs: 12, md: 12, lg: 12}, 
+                React.createElement("div", {className: "orderCard"}, 
+                    React.createElement(Table, {striped: true, bordered: true, condensed: true, hover: true}, 
+                        React.createElement("thead", null, 
+                            React.createElement("tr", null, 
+                                React.createElement("th", null, "#"), 
+                                React.createElement("th", null, "Ingredient")
+                            )
+                        ), 
+                        React.createElement("tbody", null, 
+                            ingredientsSection
+                        )
+                    ), 
+                    React.createElement("button", {bsStyle: "success", onClick: this.handleClick}, " DONE! ")
                 )
             )
 
         )
     }
-});
+})
 
 var Main = React.createClass({displayName: "Main",
 
     getInitialState: function() {
-        return {order: [], ingredients:[]};
+        return {orders: []};
     },
 
     componentDidMount: function(){
-        $.get('/api/ingredients')
-        .done(function(ingredients){
-            this.setState({ingredients: ingredients});
+        $.get('/api/orders')
+        .done(function(orders){
+            this.setState({orders: orders});
         }.bind(this));
     },
 
-    addIngredient: function(ingredient) {
-        var order = this.state.order;
-        var index = order.indexOf(ingredient)
-        if(index===-1){
-            order.push(ingredient);
-        } else {
-            order.splice(index, 1);
-        }
-        console.log(order);
-        this.setState({
-            order: order
-        });
-    },
-
-    postOrder: function(){
-        var order = {ingredients: this.state.order};
-        console.log(order);
-        $.post('/api/order', order)
-        .done(function(){
-            this.setState({order:[]});
+    deleteOrder: function(id){
+        $.post('/api/delOrder', {id:id})
+        .success(function(orders){
+            console.log(orders)
+            this.setState({orders: orders})
         }.bind(this));
     },
 
     render: function() {
-        ingredientNodes = this.state.ingredients.map(function(ingredient){
-            var active = this.state.order.indexOf(ingredient.name)>-1 ? true : false
-            return(
-                React.createElement(IngredientCard, {
-                    src: ingredient.image, 
-                    name: ingredient.name, 
-                    active: active, 
-                    key: ingredient.name, 
-                    addIngredient: this.addIngredient}
+        var orderList = this.state.orders.map(function(order){
+            console.log(order)
+            return (
+                React.createElement(OrderCard, {
+                    id: order['_id'], 
+                    ingredients: order.ingredients, 
+                    deleteOrder: this.deleteOrder, 
+                    key: order['_id']}
                 )
             )
-        }, this);
-
+        }, this)
         return (
             React.createElement("div", {className: "Main"}, 
                 React.createElement(Navbar, null, 
@@ -34882,16 +34878,13 @@ var Main = React.createClass({displayName: "Main",
                             React.createElement("a", {href: "#"}, "Scotch Toast")
                         ), 
                         React.createElement(Navbar.Toggle, null)
-                    ), 
-                    React.createElement(Navbar.Collapse, null, 
-                        React.createElement(Nav, {pullRight: true}, 
-                            React.createElement(Button, {nabItem: true, onClick: this.postOrder, bsStyle: "success"}, "Order!")
-                        )
                     )
                 ), 
                 React.createElement(Grid, null, 
+                    React.createElement("h3", null, " Orders: "), 
+                    React.createElement("br", null), 
                     React.createElement(Row, null, 
-                        ingredientNodes
+                        orderList
                     )
                 )
             )
